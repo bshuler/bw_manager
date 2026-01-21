@@ -165,10 +165,10 @@ pub fn main() !void {
     // var client = std.http.Client{ .allocator = allocator };
     // defer client.deinit();
 
-    const latest_tag_name = try github.getLatestReleaseTag(allocator);
-    defer allocator.free(latest_tag_name);
+    const download_uri = try github.getLatestDownloadUri(allocator);
+    defer allocator.free(download_uri);
 
-    std.debug.print("Latest Release from GitHub: {s}\n", .{latest_tag_name});
+    std.debug.print("Latest download uri from GitHub: {s}\n", .{download_uri});
 
     // const uri = try std.Uri.parse("https://api.github.com/repos/richardltc/boxwallet2/releases/latest");
 
