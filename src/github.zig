@@ -12,10 +12,22 @@ pub const GitHubRelease = struct {
 };
 
 pub fn getLatestDownloadUri(allocator: std.mem.Allocator) ![]const u8 {
+    // https://github.com/richardltc/boxwallet2/releases/download/v0.0.5/boxwallet-0.0.5-linux-x64.tar.gz
+    const base_url: []const u8 = "https://github/richardltc/boxwallet2/releases/download/";
+
     const latest_tag = try getLatestReleaseTag(allocator);
     defer allocator.free(latest_tag);
 
-    return try allocator.dupe(u8, latest_tag);
+    const filename = try convertTagToFile(latest_tag);
+
+    // Use allocPrint to concatenate the parts into a new string
+    const full_url = try std.fmt.allocPrint(allocator, "{s}{s}/{s}", .{
+        base_url,
+        latest_tag,
+        filename,
+    });
+
+    return full_url;
 }
 
 fn convertTagToFile(tag: []const u8) ![]const u8 {
