@@ -1,5 +1,6 @@
 const builtin = @import("builtin");
 const std = @import("std");
+const rjm_strings = @import("rjm_strings.zig");
 
 pub const GitHubRelease = struct {
     tag_name: []const u8,
@@ -18,7 +19,7 @@ pub fn getLatestDownloadUri(allocator: std.mem.Allocator) ![]const u8 {
     const latest_tag = try getLatestReleaseTag(allocator);
     defer allocator.free(latest_tag);
 
-    const filename = try convertTagToFile(latest_tag);
+    const filename = try convertTagToFile(allocator, latest_tag);
 
     // Use allocPrint to concatenate the parts into a new string
     const full_url = try std.fmt.allocPrint(allocator, "{s}{s}/{s}", .{
@@ -30,8 +31,16 @@ pub fn getLatestDownloadUri(allocator: std.mem.Allocator) ![]const u8 {
     return full_url;
 }
 
-fn convertTagToFile(tag: []const u8) ![]const u8 {
-    _ = tag;
+fn convertTagToFile(allocator: std.mem.Allocator, tag: []const u8) ![]const u8 {
+    // boxwallet-0.0.5-linux-x64.tar.gz
+    const result = try rjm_strings.replaceString(allocator, tag, "v", "");
+    defer allocator.free(result);
+
+    std.debug.print("Trimmed tag: {s}\n", .{result});
+
+    const str1: []const u8 = "boxwallet-";
+    const str2: []const u8 = "-linux-x64.tar.gz";
+
     return switch (builtin.os.tag) {
         .linux => switch (builtin.cpu.arch) {
             .x86_64 => "Linux 64-bit (x86)",
