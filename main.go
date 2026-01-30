@@ -71,7 +71,7 @@ func main() {
 		dir := latest_version
 
 		if err := os.MkdirAll(dir, 0755); err != nil {
-			fmt.Errorf("unable to create directory: %v", err)
+			fmt.Fprintf(os.Stderr, "unable to create directory: %v", err)
 		}
 
 		dest := path.Join(dir, filename)
@@ -82,7 +82,7 @@ func main() {
 		}
 
 		if err := archiver.Unarchive(dest, dir); err != nil {
-			fmt.Errorf("unable to unarchive file: %v - %v", dest, err)
+			fmt.Fprintf(os.Stderr, "unable to unarchive file: %v - %v", dest, err)
 		}
 
 	} else {
