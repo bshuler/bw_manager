@@ -8,6 +8,7 @@ import (
 	"os"
 	"path"
 
+	"github.com/mholt/archiver/v3"
 	gh "github.com/richardltc/bw_manager/github"
 	rjmInternet "github.com/richardltc/bw_manager/rjminternet"
 )
@@ -77,8 +78,13 @@ func main() {
 
 		// The user has chosen to download the latest version...
 		if err := rjmInternet.DownloadFile(dest, downloadUrl); err != nil {
-			fmt.Errorf("unable to download file: %v - %v", downloadUrl, err)
+			fmt.Fprintf(os.Stderr, "unable to download file: %v - %v", downloadUrl, err)
 		}
+
+		if err := archiver.Unarchive(dest, dir); err != nil {
+			fmt.Errorf("unable to unarchive file: %v - %v", dest, err)
+		}
+
 	} else {
 		// The latest version has already been downloaded, as the directory exists
 		fmt.Println("You already have the latest version of " + green + "BoxWallet" + reset)
