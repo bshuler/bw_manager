@@ -57,7 +57,7 @@ func main() {
 		log.Fatalf("Failed to fetch release: %v", err)
 	}
 
-	if !dirExists("v" + latest_version) {
+	if !dirExists(latest_version) {
 		reader := bufio.NewReader(os.Stdin)
 		fmt.Print("\nThe latest version of " + green + "BoxWallet" + reset + " is: " + boldGreen + latest_version + reset + "\n\nWould you like to download it? (y/n): ")
 		input, _ := reader.ReadString('\n')
