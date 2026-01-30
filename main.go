@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"path/filepath"
+	"path"
 
 	gh "github.com/richardltc/bw_manager/github"
 	rjmInternet "github.com/richardltc/bw_manager/rjminternet"
@@ -67,21 +67,16 @@ func main() {
 			return
 		}
 
-		// Create the directory for the latest version
-		// 1. Use filepath.Join to handle cross-platform separators ( \ vs / )
-		// This will result in "my_project/data/logs" on Linux/Mac
-		// and "my_project\data\logs" on Windows.
-		path := filepath.Join("v" + latest_version)
+		dir := latest_version
 
-		// 2. os.MkdirAll creates the directory AND any missing parents.
-		// 0755 is a standard permission (rwxr-xr-x).
-		// On Windows, Go translates these Unix-style permissions effectively.
-		if err := os.MkdirAll("v"+latest_version, 0755); err != nil {
+		if err := os.MkdirAll(dir, 0755); err != nil {
 			fmt.Errorf("unable to create directory: %v", err)
 		}
 
+		dest := path.Join(dir, filename)
+
 		// The user has chosen to download the latest version...
-		if err := rjmInternet.DownloadFile(filename, downloadUrl); err != nil {
+		if err := rjmInternet.DownloadFile(dest, downloadUrl); err != nil {
 			fmt.Errorf("unable to download file: %v - %v", downloadUrl, err)
 		}
 	} else {
