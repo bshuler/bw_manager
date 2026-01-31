@@ -2,6 +2,7 @@ package github
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"runtime"
@@ -79,30 +80,33 @@ func convertTagToFile(tag string) (string, error) {
 		case "amd64":
 			suffix = "linux-x64.tar.gz"
 		case "arm64":
-			suffix = "Linux 64-bit (ARM)"
+			suffix = "linux-arm64.tar.gz"
 		default:
-			suffix = "Linux (Other Arch)"
+			suffix = ""
 		}
 	case "windows":
 		switch runtime.GOARCH {
 		case "amd64":
-			suffix = "Windows 64-bit"
+			suffix = "windows-x64.zip"
 		default:
-			suffix = "Windows (Other/32-bit)"
+			suffix = ""
 		}
 	case "darwin": // macOS is 'darwin' in Go
 		switch runtime.GOARCH {
 		case "amd64":
-			suffix = "macOS (Intel)"
+			suffix = ""
 		case "arm64":
-			suffix = "macOS (Apple Silicon/M-series)"
+			suffix = ""
 		default:
-			suffix = "macOS (Other Arch)"
+			suffix = ""
 		}
 	default:
-		suffix = "Unsupported Operating System"
+		suffix = ""
 	}
 
+	if suffix == "" {
+		return fmt.Sprintf("%s%s-%s", prefix, version, suffix), errors.New("Unsupported platform")
+	}
 	// Construct the final string: boxwallet-0.0.5-linux-x64.tar.gz
 	return fmt.Sprintf("%s%s-%s", prefix, version, suffix), nil
 }
