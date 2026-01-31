@@ -46,7 +46,7 @@ func main() {
 	)
 
 	// Defer runs when the surrounding function exits
-	defer fmt.Printf("%s%s%s finished!\n",
+	defer fmt.Printf("\n%s%s%s finished!\n",
 		green, app.name, reset,
 	)
 
@@ -85,6 +85,12 @@ func main() {
 			fmt.Fprintf(os.Stderr, "unable to unarchive file: %v - %v", dest, err)
 		}
 
+		if err := os.RemoveAll(dest); err != nil {
+			fmt.Fprintf(os.Stderr, "unable to remove file: %v - %v", dest, err)
+		}
+
+		fmt.Println("All done!\n\nPlease run the following command and visit localhost:400 to find your new BoxWallet!")
+		fmt.Println("\n./" + dir + "/boxwallet/bin/boxwallet start")
 	} else {
 		// The latest version has already been downloaded, as the directory exists
 		fmt.Println("You already have the latest version of " + green + "BoxWallet" + reset)
