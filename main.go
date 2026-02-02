@@ -91,7 +91,7 @@ func main() {
 			fmt.Fprintf(os.Stderr, "unable to remove file: %v - %v", dest, err)
 		}
 
-		fmt.Println("All done!\n\nPlease run the following command and visit localhost:400 to find your new BoxWallet!")
+		fmt.Println("All done!\n\nPlease run the following command and visit localhost:4000 to find your new BoxWallet!")
 		fmt.Println("\n./" + dir + "/boxwallet/bin/boxwallet start")
 	} else {
 		// The latest version has already been downloaded, as the directory exists
