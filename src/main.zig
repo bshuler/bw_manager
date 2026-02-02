@@ -1,6 +1,7 @@
 const std = @import("std");
 const app = @import("app.zig");
 const github = @import("github.zig");
+const rjm_web = @import("rjm_web.zig");
 
 pub fn downloadFile(allocator: std.mem.Allocator, url: []const u8, output_path: []const u8) !void {
     var client = std.http.Client{ .allocator = allocator };
@@ -169,6 +170,8 @@ pub fn main() !void {
     defer allocator.free(download_uri);
 
     std.debug.print("Latest download uri from GitHub: {s}\n", .{download_uri});
+
+    try rjm_web.downloadFileWithProgress(allocator, download_uri, "./test.tar.gz");
 
     // const uri = try std.Uri.parse("https://api.github.com/repos/richardltc/boxwallet2/releases/latest");
 

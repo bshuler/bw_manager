@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"strings"
 
 	"github.com/mholt/archiver/v3"
 	gh "github.com/richardltc/bw_manager/github"
@@ -36,7 +37,7 @@ func main() {
 		version string
 	}{
 		name:    "BoxWallet Manager",
-		version: "0.0.1",
+		version: "0.0.2",
 	}
 
 	// Immediate log
@@ -63,7 +64,8 @@ func main() {
 		fmt.Print("\nThe latest version of " + green + "BoxWallet" + reset + " is: " + boldGreen + latest_version + reset + "\n\nWould you like to download it? (y/n): ")
 		input, _ := reader.ReadString('\n')
 		fmt.Printf("Text entered: %s\n", input)
-		if input != "y\n" {
+		input = strings.TrimSpace(input)
+		if input != "y" {
 			fmt.Println("Update cancelled.")
 			return
 		}
