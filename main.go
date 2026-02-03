@@ -63,8 +63,8 @@ func createScripts(subDir string) {
 
 	if runtime.GOOS == "windows" {
 		scriptName = "run_boxwallet.bat"
-		childScriptContent = "@echo off\n.\\" + subDir + "\\boxwallet\\bin\\boxwallet.bat start\npause"
-		parentScriptContent = "@echo off\n.\\boxwallet\\bin\\boxwallet.bat start\npause"
+		childScriptContent = "@echo off\n.\\bin\\boxwallet.bat start\npause"
+		parentScriptContent = "@echo off\n.\\" + subDir + "\\bin\\boxwallet.bat start\npause"
 	} else {
 		scriptName = "run_boxwallet.sh"
 		childScriptContent = "#!/bin/bash\n./boxwallet/bin/boxwallet start"
@@ -158,11 +158,19 @@ func main() {
 
 		fmt.Println("All done!")
 		createScripts(latest_version)
+		lastInput, _ := reader.ReadString('\n')
+		fmt.Printf("%s\n", lastInput)
+		lastInput = strings.TrimSpace(lastInput)
+
 		// fmt.Println("\n./" + dir + "/boxwallet/bin/boxwallet start")
 	} else {
 		// The latest version has already been downloaded, as the directory exists
 		fmt.Println("You already have the latest version of " + green + "BoxWallet" + reset)
 		createScripts(latest_version)
+		reader := bufio.NewReader(os.Stdin)
+		lastInput, _ := reader.ReadString('\n')
+		fmt.Printf("%s\n", lastInput)
+		lastInput = strings.TrimSpace(lastInput)
 	}
 
 	// fmt.Printf("Latest release found: %s%s%s\n", green, downloadUrl, reset)
