@@ -1,6 +1,6 @@
 The quickest way of getting BoxWallet up and running.
 
-Download the correct `bw_manager` file, for your system, and run it in the same directory that you'd like to install BoxWallet.
+Download the correct `bw_manager` file, from the release section on the right, for your system, and run it in the same directory that you'd like to install BoxWallet.
 
 The BoxWallet Manager app will create a subfolder for the latest version (if it doesn't exist) and installs everything required to run BoxWallet in your browser.
 
