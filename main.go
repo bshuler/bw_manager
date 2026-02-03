@@ -102,7 +102,7 @@ func main() {
 		version string
 	}{
 		name:    "BoxWallet Manager",
-		version: "0.0.2",
+		version: "0.0.3",
 	}
 
 	// Immediate log
