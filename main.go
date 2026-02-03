@@ -58,28 +58,37 @@ func runBoxWallet(subDir string) {
 	}
 }
 
-func createScript(subDir string) {
-	var scriptName, scriptContent string
+func createScripts(subDir string) {
+	var scriptName, childScriptContent, parentScriptContent string
 
 	if runtime.GOOS == "windows" {
 		scriptName = "run_boxwallet.bat"
-		scriptContent = "@echo off\n.\\boxwallet\\bin\\boxwallet.bat start\npause"
+		childScriptContent = "@echo off\n.\\" + subDir + "\\boxwallet\\bin\\boxwallet.bat start\npause"
+		parentScriptContent = "@echo off\n.\\boxwallet\\bin\\boxwallet.bat start\npause"
 	} else {
 		scriptName = "run_boxwallet.sh"
-		scriptContent = "#!/bin/bash\n./boxwallet/bin/boxwallet start"
+		childScriptContent = "#!/bin/bash\n./boxwallet/bin/boxwallet start"
+		parentScriptContent = "#!/bin/bash\n./" + subDir + "/boxwallet/bin/boxwallet start"
 	}
 
-	fullPath := path.Join(subDir, scriptName)
+	childScriptFullPath := path.Join(subDir, scriptName)
+	parentScriptFullPath := path.Join(scriptName)
 
-	// 1. Create the script file
-	err := os.WriteFile(fullPath, []byte(scriptContent), 0755)
-	if err != nil {
+	// 1. Create the parent script file
+	if err := os.WriteFile(parentScriptFullPath, []byte(parentScriptContent), 0755); err != nil {
 		fmt.Printf("Error creating launcher: %v\n", err)
 		return
 	}
 
-	fmt.Printf("\n✅ Launcher created: %s\n", fullPath)
-	fmt.Println("Please run this file to start the BoxWallet engine.")
+	// 1. Create the child script file
+	if err := os.WriteFile(childScriptFullPath, []byte(childScriptContent), 0755); err != nil {
+		fmt.Printf("Error creating launcher: %v\n", err)
+		return
+	}
+
+	fmt.Printf("\n✅ Launcher created: %s\n", parentScriptFullPath)
+	fmt.Printf("\n✅ Launcher created: %s\n", childScriptFullPath)
+	fmt.Println("Please run either of these files to start the BoxWallet engine.")
 }
 
 func main() {
@@ -148,12 +157,12 @@ func main() {
 		}
 
 		fmt.Println("All done!")
-		createScript(latest_version)
+		createScripts(latest_version)
 		// fmt.Println("\n./" + dir + "/boxwallet/bin/boxwallet start")
 	} else {
 		// The latest version has already been downloaded, as the directory exists
 		fmt.Println("You already have the latest version of " + green + "BoxWallet" + reset)
-		createScript(latest_version)
+		createScripts(latest_version)
 	}
 
 	// fmt.Printf("Latest release found: %s%s%s\n", green, downloadUrl, reset)
