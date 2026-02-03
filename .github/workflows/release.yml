@@ -1,0 +1,62 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      - name: Build Linux AMD64
+        run: |
+          env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="-s -w" -o bw_manager_lin_amd64
+
+      - name: Build Linux ARM64
+        run: |
+          env GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -ldflags="-s -w" -o bw_manager_lin_arm64
+
+      - name: Build macOS AMD64
+        run: |
+          env GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="-s -w" -o bw_manager_mac_amd64
+
+      - name: Build macOS ARM64
+        run: |
+          env GOOS=darwin GOARCH=arm64 CGO_ENABLED=0 go build -ldflags="-s -w" -o bw_manager_mac_arm64
+
+      - name: Build Windows AMD64
+        run: |
+          env GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="-s -w" -o bw_manager_win.exe
+
+      - name: Generate SHA256 checksums
+        run: |
+          sha256sum bw_manager_lin_amd64 >> checksums.txt
+          sha256sum bw_manager_lin_arm64 >> checksums.txt
+          sha256sum bw_manager_mac_amd64 >> checksums.txt
+          sha256sum bw_manager_mac_arm64 >> checksums.txt
+          sha256sum bw_manager_win.exe >> checksums.txt
+          cat checksums.txt
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            bw_manager_lin_amd64
+            bw_manager_lin_arm64
+            bw_manager_mac_amd64
+            bw_manager_mac_arm64
+            bw_manager_win.exe
+            checksums.txt
+          generate_release_notes: true
