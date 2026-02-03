@@ -78,7 +78,7 @@ func createScript(subDir string) {
 		return
 	}
 
-	fmt.Printf("✅ Launcher created: %s\n", fullPath)
+	fmt.Printf("\n✅ Launcher created: %s\n", fullPath)
 	fmt.Println("Please run this file to start the BoxWallet engine.")
 }
 
@@ -147,7 +147,7 @@ func main() {
 			fmt.Fprintf(os.Stderr, "unable to remove file: %v - %v", dest, err)
 		}
 
-		fmt.Println("All done!\n\n")
+		fmt.Println("All done!")
 		createScript(latest_version)
 		// fmt.Println("\n./" + dir + "/boxwallet/bin/boxwallet start")
 	} else {
